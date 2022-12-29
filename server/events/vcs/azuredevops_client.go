@@ -389,7 +389,7 @@ func (g *AzureDevopsClient) SupportsSingleFileDownload(repo models.Repo) bool {
 	return false
 }
 
-func (g *AzureDevopsClient) DownloadRepoConfigFile(pull models.PullRequest) (bool, []byte, error) {
+func (g *AzureDevopsClient) DownloadRepoConfigFile(pull models.PullRequest, atlantisYAMLFilename string) (bool, []byte, error) {
 	return false, []byte{}, fmt.Errorf("Not Implemented")
 }
 

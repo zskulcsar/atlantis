@@ -83,11 +83,11 @@ projects:
 	global, err := parser.ParseGlobalCfg(globalYAMLPath, valid.NewGlobalCfgFromArgs(globalCfgArgs))
 	require.NoError(t, err)
 
-	repoYAMLPath := filepath.Join(tmp, "atlantis.yaml")
+	repoYAMLPath := filepath.Join(tmp, config.AtlantisYAMLFilename)
 	err = ioutil.WriteFile(repoYAMLPath, []byte(repoYAML), 0600)
 	require.NoError(t, err)
 
-	repo, err := parser.ParseRepoCfg(tmp, global, "github.com/foo/bar", "main")
+	repo, err := parser.ParseRepoCfg(tmp, config.AtlantisYAMLFilename, global, "github.com/foo/bar", "main")
 	require.NoError(t, err)
 
 	require.Equal(t, 1, len(repo.Projects))
