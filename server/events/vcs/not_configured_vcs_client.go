@@ -61,7 +61,7 @@ func (a *NotConfiguredVCSClient) SupportsSingleFileDownload(repo models.Repo) bo
 	return false
 }
 
-func (a *NotConfiguredVCSClient) DownloadRepoConfigFile(pull models.PullRequest) (bool, []byte, error) {
+func (a *NotConfiguredVCSClient) DownloadRepoConfigFile(pull models.PullRequest, atlantisYAMLFilename string) (bool, []byte, error) {
 	return true, []byte{}, a.err()
 }
 func (a *NotConfiguredVCSClient) GetCloneURL(VCSHostType models.VCSHostType, repo string) (string, error) {

@@ -24,6 +24,7 @@ import (
 	"github.com/moby/moby/pkg/fileutils"
 	"github.com/pkg/errors"
 	"github.com/runatlantis/atlantis/server"
+	"github.com/runatlantis/atlantis/server/core/config"
 	"github.com/runatlantis/atlantis/server/core/config/valid"
 	"github.com/runatlantis/atlantis/server/events/vcs/bitbucketcloud"
 	"github.com/runatlantis/atlantis/server/logging"
@@ -45,6 +46,7 @@ const (
 	AllowForkPRsFlag                 = "allow-fork-prs"
 	AllowRepoConfigFlag              = "allow-repo-config"
 	AtlantisURLFlag                  = "atlantis-url"
+	AtlantisYAMLFilenameFlag         = "atlantis-yaml"
 	AutomergeFlag                    = "automerge"
 	AutoplanFileListFlag             = "autoplan-file-list"
 	BitbucketBaseURLFlag             = "bitbucket-base-url"
@@ -127,6 +129,7 @@ const (
 	DefaultADBasicPassword              = ""
 	DefaultADHostname                   = "dev.azure.com"
 	DefaultAutoplanFileList             = "**/*.tf,**/*.tfvars,**/*.tfvars.json,**/terragrunt.hcl,**/.terraform.lock.hcl"
+	DefaultAtlantisYAMLFilename         = config.AtlantisYAMLFilename
 	DefaultCheckoutStrategy             = "branch"
 	DefaultBitbucketBaseURL             = bitbucketcloud.BaseURL
 	DefaultDataDir                      = "~/.atlantis"
@@ -175,6 +178,10 @@ var stringFlags = map[string]stringFlag{
 	},
 	AtlantisURLFlag: {
 		description: "URL that Atlantis can be reached at. Defaults to http://$(hostname):$port where $port is from --" + PortFlag + ". Supports a base path ex. https://example.com/basepath.",
+	},
+	AtlantisYAMLFilenameFlag: {
+		description:  "The name of the Atlantis config yaml file contained in each repo. Defaults to atlantis.yaml.",
+		defaultValue: DefaultAtlantisYAMLFilename,
 	},
 	AutoplanFileListFlag: {
 		description: "Comma separated list of file patterns that Atlantis will use to check if a directory contains modified files that should trigger project planning." +
@@ -709,6 +716,9 @@ func (s *ServerCmd) setDefaults(c *server.UserConfig) {
 	}
 	if c.AutoplanFileList == "" {
 		c.AutoplanFileList = DefaultAutoplanFileList
+	}
+	if c.AtlantisYAMLFile == "" {
+		c.AtlantisYAMLFile = DefaultAtlantisYAMLFilename
 	}
 	if c.CheckoutStrategy == "" {
 		c.CheckoutStrategy = DefaultCheckoutStrategy

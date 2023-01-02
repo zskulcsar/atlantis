@@ -11,6 +11,7 @@ type UserConfig struct {
 	AllowForkPRs                    bool   `mapstructure:"allow-fork-prs"`
 	AllowRepoConfig                 bool   `mapstructure:"allow-repo-config"`
 	AtlantisURL                     string `mapstructure:"atlantis-url"`
+	AtlantisYAMLFile                string `mapstructure:"atlantis-yaml"`
 	Automerge                       bool   `mapstructure:"automerge"`
 	AutoplanFileList                string `mapstructure:"autoplan-file-list"`
 	AzureDevopsToken                string `mapstructure:"azuredevops-token"`

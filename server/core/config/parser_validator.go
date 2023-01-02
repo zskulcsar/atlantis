@@ -25,15 +25,11 @@ type ParserValidator struct{}
 // HasRepoCfg returns true if there is a repo config (atlantis.yaml) file
 // for the repo at absRepoDir.
 // Returns an error if for some reason it can't read that directory.
-func (p *ParserValidator) HasRepoCfg(absRepoDir string) (bool, error) {
+func (p *ParserValidator) HasRepoCfg(absRepoDir string, atlantisYAMLFilename string) (bool, error) {
 	// Checks for a config file with an invalid extension (atlantis.yml)
-	const invalidExtensionFilename = "atlantis.yml"
-	_, err := os.Stat(p.repoCfgPath(absRepoDir, invalidExtensionFilename))
-	if err == nil {
-		return false, errors.Errorf("found %q as config file; rename using the .yaml extension - %q", invalidExtensionFilename, AtlantisYAMLFilename)
-	}
 
-	_, err = os.Stat(p.repoCfgPath(absRepoDir, AtlantisYAMLFilename))
+	var err error
+	_, err = os.Stat(p.repoCfgPath(absRepoDir, atlantisYAMLFilename))
 	if os.IsNotExist(err) {
 		return false, nil
 	}
@@ -43,13 +39,13 @@ func (p *ParserValidator) HasRepoCfg(absRepoDir string) (bool, error) {
 // ParseRepoCfg returns the parsed and validated atlantis.yaml config for the
 // repo at absRepoDir.
 // If there was no config file, it will return an os.IsNotExist(error).
-func (p *ParserValidator) ParseRepoCfg(absRepoDir string, globalCfg valid.GlobalCfg, repoID string, branch string) (valid.RepoCfg, error) {
-	configFile := p.repoCfgPath(absRepoDir, AtlantisYAMLFilename)
+func (p *ParserValidator) ParseRepoCfg(absRepoDir string, atlantisYAMLFilename string, globalCfg valid.GlobalCfg, repoID string, branch string) (valid.RepoCfg, error) {
+	configFile := p.repoCfgPath(absRepoDir, atlantisYAMLFilename)
 	configData, err := os.ReadFile(configFile) // nolint: gosec
 
 	if err != nil {
 		if !os.IsNotExist(err) {
-			return valid.RepoCfg{}, errors.Wrapf(err, "unable to read %s file", AtlantisYAMLFilename)
+			return valid.RepoCfg{}, errors.Wrapf(err, "unable to read %s file", atlantisYAMLFilename)
 		}
 		// Don't wrap os.IsNotExist errors because we want our callers to be
 		// able to detect if it's a NotExist err.

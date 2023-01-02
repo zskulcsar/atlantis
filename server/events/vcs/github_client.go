@@ -23,7 +23,6 @@ import (
 
 	"github.com/google/go-github/v31/github"
 	"github.com/pkg/errors"
-	"github.com/runatlantis/atlantis/server/core/config"
 	"github.com/runatlantis/atlantis/server/events/command"
 	"github.com/runatlantis/atlantis/server/events/models"
 	"github.com/runatlantis/atlantis/server/events/vcs/common"
@@ -579,9 +578,9 @@ func (g *GithubClient) ExchangeCode(code string) (*GithubAppTemporarySecrets, er
 // DownloadRepoConfigFile return `atlantis.yaml` content from VCS (which support fetch a single file from repository)
 // The first return value indicate that repo contain atlantis.yaml or not
 // if BaseRepo had one repo config file, its content will placed on the second return value
-func (g *GithubClient) DownloadRepoConfigFile(pull models.PullRequest) (bool, []byte, error) {
+func (g *GithubClient) DownloadRepoConfigFile(pull models.PullRequest, atlantisYAMLFilename string) (bool, []byte, error) {
 	opt := github.RepositoryContentGetOptions{Ref: pull.HeadBranch}
-	fileContent, _, resp, err := g.client.Repositories.GetContents(g.ctx, pull.BaseRepo.Owner, pull.BaseRepo.Name, config.AtlantisYAMLFilename, &opt)
+	fileContent, _, resp, err := g.client.Repositories.GetContents(g.ctx, pull.BaseRepo.Owner, pull.BaseRepo.Name, atlantisYAMLFilename, &opt)
 
 	if resp.StatusCode == http.StatusNotFound {
 		return false, []byte{}, nil
